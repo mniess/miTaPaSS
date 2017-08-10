@@ -1,24 +1,27 @@
 #include <iostream>
+#include <string>
 
-#include "config.h"
+#include "bin/config.h"
 
-int checkHelp(int argc, char* argv[]){
-	if(argc==2){
-		if( argv[1] == std::string("help") || argv[1] == std::string("-h") || argv[1] == std::string("--help")){
-			std::cout << "Usage: " << argv[0] << " [CONF_FILE]" << std::endl;
-			return 0;
-		}
-	}
+int checkHelp(int argc, char* argv[]) {
+  if ( argc == 2 ) {
+    if ( argv[1] == std::string("-h") || argv[1] == std::string("--help") ) {
+      fprintf(stdout, "%s Version %d.%d\n",
+         argv[0], VERSION_MAJOR, VERSION_MINOR);
+      fprintf(stdout, "Usage: %s %s\n", argv[0], "[CONF_FILE]");
+      return 1;
+    }
+  }
 }
 
-int main(int argc,char* argv[]) {
-	checkHelp(argc,argv);
-	std::string configFile = "default.cfg";
-	if(argc==2){
-			configFile = argv[1];
-	}
-	std::cout <<"using config file '" << configFile << "'" << std::endl;
-	Config conf;
-	conf.readConfig(configFile);
-	return 0;
+int main(int argc, char* argv[]) {
+  if ( checkHelp(argc, argv) ) {
+    return 0;
+  }
+  std::string configFile = "default.cfg";
+  if ( argc == 2 ) {
+    configFile = argv[1];
+  }
+  std::cout <<"using config file '" << configFile << "'" << std::endl;
+  return 0;
 }

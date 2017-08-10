@@ -7,6 +7,6 @@ minimal Task Partitioning Swarm Simulator
  1. make program ''make''
 
 ## Usage
-	compiled progam is in ''build/bin/miTaPaSS''
+	compiled progam is in ''bin/miTaPaSS''
 
-	''./build/bin/miTaPaSS''
+	''./bin/miTaPaSS''

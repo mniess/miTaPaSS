@@ -1,0 +1,17 @@
+#ifndef SRC_CONFIG_H_
+#define SRC_CONFIG_H_
+
+#include <string>
+
+#define VERSION_MAJOR @MITAPASS_VERSION_MAJOR@
+#define VERSION_MINOR @MITAPASS_VERSION_MINOR@
+
+class Config{
+ public:
+  int readConfig(std::string file);
+  std::string getValue(std::string key);
+ private:
+  int setOption(std::string key, std::string value);
+};
+
+#endif  // SRC_CONFIG_H_
