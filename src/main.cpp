@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "bin/config.h"
+#include "bin/Config.h"
 
 int checkHelp(int argc, char* argv[]) {
   if ( argc == 2 ) {

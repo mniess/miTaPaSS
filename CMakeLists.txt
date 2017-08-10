@@ -14,16 +14,16 @@ SET(EXECUTABLE_OUTPUT_PATH ../bin
 CACHE PATH "CMakeLists.txt files optimized for this directory! Please do not change.")
 
 configure_file (
-	"${PROJECT_SOURCE_DIR}/src/config.h.in"
-	"${PROJECT_SOURCE_DIR}/bin/config.h"
+	"${PROJECT_SOURCE_DIR}/src/Config.h.in"
+	"${PROJECT_SOURCE_DIR}/bin/Config.h"
 	)
 
 include_directories(.)
 
 SET(MITAPASS_SRC
 	${PROJECT_SOURCE_DIR}/src/main.cpp
-	${PROJECT_SOURCE_DIR}/src/config.cpp
-	${PROJECT_SOURCE_DIR}/bin/config.h
+	${PROJECT_SOURCE_DIR}/src/Config.cpp
+	${PROJECT_SOURCE_DIR}/bin/Config.h
 	${RESOURCE_FILE}
 )
 

@@ -3,7 +3,7 @@
 
 #include <string>
 
-class Config{
+class Simulator{
  public:
   simulate();
  private:
