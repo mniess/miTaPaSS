@@ -2,15 +2,26 @@
 #define SRC_CONFIG_H_
 
 #include <string>
+#include <map>
 
 #define VERSION_MAJOR @MITAPASS_VERSION_MAJOR@
 #define VERSION_MINOR @MITAPASS_VERSION_MINOR@
 
+#define AREA_WIDTH "area_width"
+#define AREA_HEIGHT "area_height"
+#define AREA_NUM "area_num"
+#define ROBOT_NUM "robot_num"
+
 class Config{
  public:
+  Config();
+  explicit Config(std::string configFile);
+
   int readConfig(std::string file);
   std::string getValue(std::string key);
  private:
+  std::map<std::string,std::string> values;
+
   int setOption(std::string key, std::string value);
 };
 

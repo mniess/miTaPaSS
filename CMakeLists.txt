@@ -18,14 +18,22 @@ configure_file (
 	"${PROJECT_SOURCE_DIR}/bin/Config.h"
 	)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
+
 include_directories(.)
+include_directories(${GTKMM_INCLUDE_DIRS})
 
 SET(MITAPASS_SRC
 	${PROJECT_SOURCE_DIR}/src/main.cpp
 	${PROJECT_SOURCE_DIR}/src/Config.cpp
-	${PROJECT_SOURCE_DIR}/bin/Config.h
+	${PROJECT_SOURCE_DIR}/src/Simulator.cpp
+	${PROJECT_SOURCE_DIR}/src/FerranteFake.cpp
+	${PROJECT_SOURCE_DIR}/src/Visualization.cpp
 	${RESOURCE_FILE}
 )
 
 set(CMAKE_CXX_STANDARD 17)
 ADD_EXECUTABLE(miTaPaSS ${MITAPASS_SRC})
+
+target_link_libraries(miTaPaSS ${GTKMM_LIBRARIES})
