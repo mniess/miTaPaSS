@@ -33,9 +33,8 @@ bool Visualization::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
       for (int j = 0; j < area[i].size(); j += 1) {
         double tokens = area[i][j];
         if (tokens != 0) {
-          float col = 0.5 + (min(10.0, tokens)/10);
+          float col = 0.5 + (min(10.0, tokens)/20);
           col < 0 ? 0 : col;
-          cout << col << endl;
           cr->set_source_rgb(col, 0, 0);
         } else {
           cr->set_source_rgb(0.8, 0.8, 0.8);

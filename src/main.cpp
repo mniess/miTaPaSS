@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "bin/Config.h"
 #include "src/Simulator.h"
@@ -45,11 +46,14 @@ int main(int argc, char* argv[]) {
   Config conf(configFile);
   Simulator sim(conf);
 
-  createVisualization();
+  std::thread t{createVisualization};
+
   std::cout << "Simulating" << std::endl;
   if (sim.simulate()) {
+    t.join();
     return 0;
   } else {
+    t.join();
     return 1;
   }
 }

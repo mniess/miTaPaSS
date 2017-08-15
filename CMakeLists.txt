@@ -18,6 +18,7 @@ configure_file (
 	"${PROJECT_SOURCE_DIR}/bin/Config.h"
 	)
 
+find_package(Threads)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
@@ -36,4 +37,5 @@ SET(MITAPASS_SRC
 set(CMAKE_CXX_STANDARD 17)
 ADD_EXECUTABLE(miTaPaSS ${MITAPASS_SRC})
 
+target_link_libraries(miTaPaSS ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(miTaPaSS ${GTKMM_LIBRARIES})
