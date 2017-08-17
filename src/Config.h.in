@@ -12,6 +12,13 @@
 #define AREA_NUM "area_num"
 #define ROBOT_NUM "robot_num"
 
+#define AREA_NEST_BEGIN "area_nest_begin"
+#define AREA_NEST_END "area_nest_end"
+#define AREA_SLOPE_BEGIN "area_slope_begin"
+#define AREA_SLOPE_END "area_slope_end"
+#define AREA_SOURCE_BEGIN "area_source_begin"
+#define AREA_SOURCE_END "area_source_end"
+
 class Config{
  public:
   Config();
