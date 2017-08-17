@@ -41,6 +41,37 @@ struct Area{
   }
 };
 
+struct Robot {
+  int x;
+  int y;
+  bool carrying;
+
+  int[] getPos() {
+    return [x, y];
+  }
+
+  int getX() {
+    return x;
+  }
+
+  int getY() {
+    return y;
+  }
+
+  bool isCarrying() {
+    return carrying;
+  }
+
+  void setPos(x, y) {
+    this->x = x;
+    this->y = y;
+  }
+
+  void carry(bool c) {
+    carrying = c;
+  }
+}
+
 class Simulator{
  public:
   Simulator();
