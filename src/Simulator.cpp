@@ -57,7 +57,7 @@ int Simulator::init_areas(int width, int length, int num) {
   //   vector<vector<int>  > area(width, std::vector<int>(length, 0));
   //   areas.push_back(area);
   // }
-  vector<vector<int>  > area(width, std::vector<int>(length, 0));
+  Area area(width, length);
   areas.resize(num, area);
   return 1;
 }
