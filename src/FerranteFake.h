@@ -1,10 +1,12 @@
 #ifndef SRC_FERRANTEFAKE_H_
 #define SRC_FERRANTEFAKE_H_
 
-#include "RobotEngine.h"
+#include "src/RobotEngine.h"
+#include "src/Action.h"
+#include "src/Robot.h"
 
 class FerranteFake: public RobotEngine {
  public:
-  Action nextAction(int location, bool item);
+  Action nextAction(int zone, bool holding);
 };
 #endif  // SRC_FERRANTEFAKE_H_

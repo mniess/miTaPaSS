@@ -8,17 +8,21 @@
 #define VERSION_MINOR @MITAPASS_VERSION_MINOR@
 
 #define AREA_WIDTH "area_width"
-#define AREA_HEIGHT "area_height"
 #define AREA_NUM "area_num"
 #define ROBOT_NUM "robot_num"
 
-#define AREA_NEST_BEGIN "area_nest_begin"
-#define AREA_NEST_END "area_nest_end"
-#define AREA_SLOPE_BEGIN "area_slope_begin"
-#define AREA_SLOPE_END "area_slope_end"
-#define AREA_SOURCE_BEGIN "area_source_begin"
-#define AREA_SOURCE_END "area_source_end"
+#define ZONE_NEST_END "zone_nest_end"
+#define ZONE_CACHE_END "zone_cache_end"
+#define ZONE_SLOPE_END "zone_slope_end"
+#define ZONE_SOURCE_END "zone_source_end"
 
+#define TIME_TRY "time_try"
+#define TIME_GENERATIONS "time_generations"
+#define TIME_RUN "time_run"
+
+#define ENGINE "engine"
+
+#define ENGINE_FERRANTE "ferrante"
 class Config{
  public:
   Config();

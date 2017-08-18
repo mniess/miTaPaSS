@@ -1,8 +1,10 @@
 #include <gtkmm.h>
+#include <time.h>
 
 #include <iostream>
 #include <string>
 #include <thread>
+
 
 #include "bin/Config.h"
 #include "src/Simulator.h"
@@ -35,6 +37,7 @@ int createVisualization() {
 }
 
 int main(int argc, char* argv[]) {
+  srand(time(NULL));
   if ( checkHelp(argc, argv) ) {
     return 0;
   }
@@ -46,14 +49,10 @@ int main(int argc, char* argv[]) {
   Config conf(configFile);
   Simulator sim(conf);
 
-  std::thread t{createVisualization};
+  //std::thread t{createVisualization};
 
-  std::cout << "Simulating" << std::endl;
-  if (sim.simulate()) {
-    t.join();
-    return 0;
-  } else {
-    t.join();
-    return 1;
-  }
+  sim.simulate();
+
+  //t.join();
+  return 0;
 }

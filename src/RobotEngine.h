@@ -1,14 +1,12 @@
 #ifndef SRC_ROBOTENGINE_H_
 #define SRC_ROBOTENGINE_H_
 
-struct Action {
-  int moveDirection = 0;
-  bool pickUp = 0;
-};
+#include "src/Action.h"
+#include "src/Robot.h"
 
 class RobotEngine{
  public:
-  Action nextAction(int location, bool item);
+  virtual Action nextAction(int zone, bool holding) = 0;
 };
 
 #endif  // SRC_ROBOTENGINE_H_
