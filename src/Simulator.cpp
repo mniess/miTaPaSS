@@ -19,14 +19,15 @@ using std::cerr, std::cout, std::endl;
 Simulator::Simulator() {
 }
 
-Simulator::Simulator(Config conf) {
+Simulator::Simulator(Config &conf) {
   setConfig(conf);
 }
 
 Simulator::~Simulator() {
+  delete engine;
 }
 
-int Simulator::setConfig(Config conf) {
+int Simulator::setConfig(Config &conf) {
   zones[0] = stoi(conf.getValue(ZONE_NEST_END));
   zones[1] = stoi(conf.getValue(ZONE_CACHE_END));
   zones[2] = stoi(conf.getValue(ZONE_SLOPE_END));
@@ -92,11 +93,13 @@ int Simulator::simulate() {
       for (int gen = 0; gen < time[1]; gen++) {
         for (int run = 0; run < time[2]; run++) {
           for (int area = 0; area < num_area; area++) {
-            step_robot(area);
-            step_area(area);
+            for (auto &rob : robots[area]) {
+              step_robot(rob, area);
+            }
           }
+          printArea(0);
         }
-        // printf("Generation %i of %i finished!\n", gen+1, time[1]);
+        printf("Generation %i of %i finished!\n", gen+1, time[1]);
       }
       printf("Try %i of %i finished!\n", t+1, time[0]);
     }
@@ -114,9 +117,11 @@ int Simulator::init_areas(int width, int length, int num) {
 }
 
 int Simulator::init_robots(int numberOnArea) {
+  Robot r(0, 0, 0, width, 0, height);
+  std::vector<Robot> vr(numberOnArea, r);
+  robots.resize(areas.size(), vr);
+cout << areas.size() << " " << robots.size() << " " << robots[0].size() << endl;
   for (int i = 0; i < areas.size(); i++) {
-    std::vector<Robot> r;
-    robots.push_back(r);
     int robs = 0;
     while (robs < numberOnArea) {
       int x = rand() % width;
@@ -124,36 +129,39 @@ int Simulator::init_robots(int numberOnArea) {
       if (hasRobotAt(i, x, y)) {
         continue;
       } else {
-        Robot r(x, y);
-        robots[i].push_back(r);
+        robots.at(i).at(robs).setPos(x, y);
         ++robs;
       }
     }
-    return 1;
   }
+  return 1;
 }
 
-int Simulator::getZone(int x) {
+int Simulator::getZone(int y) {
   for (int i = 0; i < 4; i++) {
-    if (x < zones[i]) {
+    if (y < zones[i]) {
       return i;
     }
   }
   return -1;
 }
 
-int Simulator::getZone(Robot r) {
-  return getZone(r.getX());
+int Simulator::getZone(Robot &r) {
+  return getZone(r.getY());
 }
 
 bool Simulator::hasRobotAt(int area, int x, int y) {
-  if (robots.size() > 0) {
-    for (auto rob : robots[area]) {
-      if (rob.getX() == x && rob.getY() == y)
+  if (robots.size() > area) {
+    for (auto &rob : robots[area]) {
+      if (rob.getX() == x && rob.getY() == y) {
         return true;
+      }
     }
+    return false;
+  } else {
+    cerr << "error has_robot: there is no area " << area << endl;
+    return false;
   }
-  return false;
 }
 
 void Simulator::printArea(int index) {
@@ -179,14 +187,48 @@ void Simulator::printArea(int index) {
     }
     cout << endl;
   }
+  cout << endl;
 }
 
-int Simulator::step_robot(int area) {
-  for (auto rob : robots[area]) {
-    Action a = engine->nextAction(getZone(rob), rob.isCarrying());
+int Simulator::step_robot(Robot &rob, int area) {
+  Action a = engine->nextAction(getZone(rob), rob.isCarrying());
+  if (a.dir != 0) {
+    if (!hasRobotAt(area, rob.getX(), rob.getY() + a.dir)) {
+      //cout << a.dir << " y: " << rob.getY() << " -> ";
+      a.dir > 0 ? rob.moveForward() : rob.moveBackward();
+      //cout << rob.getY() << endl;
+    }
+  } else {  // random walk
+    int newX = rob.getX() + (rand()%2 -1);
+    int newY = rob.getY() + (rand()%2 -1);
+    if (!hasRobotAt(area, newX, newY)) {
+      rob.setPos(newX, newY);
+    }
   }
+
+  if (rob.isCarrying() && !a.pickUp) {
+    dropItem(rob, area);
+  } else if (!rob.isCarrying() && a.pickUp) {
+    pickUpItem(rob, area);
+  }
+  return 1;
 }
 
-int Simulator::step_area(int area) {
-  Area a = areas[area];
+int Simulator::dropItem(Robot &rob, int area) {
+  rob.carry(false);
+  int x = rob.getX();
+  int y = rob.getY();
+  if (getZone(y) == 2) {
+    y = zones[1];
+  }
+  ++areas[area][x][y];
+  return 1;
+}
+
+int Simulator::pickUpItem(Robot &rob, int area) {
+  if (areas.at(area)[rob.getX()][rob.getY()] > 0) {
+    rob.carry(true);
+    --areas.at(area)[rob.getX()][rob.getY()];
+  }
+  return 1;
 }

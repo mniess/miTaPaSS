@@ -49,10 +49,10 @@ int main(int argc, char* argv[]) {
   Config conf(configFile);
   Simulator sim(conf);
 
-  //std::thread t{createVisualization};
-
+  // std::thread t{createVisualization};
   sim.simulate();
 
-  //t.join();
+
+  // t.join();
   return 0;
 }

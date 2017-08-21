@@ -4,5 +4,7 @@
 
 Action FerranteFake::nextAction(int zone, bool holding) {
   Action res;
+  res.dir = 1;
+  res.pickUp = 0;
   return res;
 }
