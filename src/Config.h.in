@@ -7,9 +7,12 @@
 #define VERSION_MAJOR @MITAPASS_VERSION_MAJOR@
 #define VERSION_MINOR @MITAPASS_VERSION_MINOR@
 
-#define AREA_WIDTH "area_width"
+
 #define AREA_NUM "area_num"
+#define TOKEN_NUM "token_num"
 #define ROBOT_NUM "robot_num"
+
+#define AREA_WIDTH "area_width"
 
 #define ZONE_NEST_END "zone_nest_end"
 #define ZONE_CACHE_END "zone_cache_end"

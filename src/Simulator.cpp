@@ -37,6 +37,7 @@ int Simulator::setConfig(Config &conf) {
 
   num_area = stoi(conf.getValue(AREA_NUM));
   num_robot = stoi(conf.getValue(ROBOT_NUM));
+  num_token = stoi(conf.getValue(TOKEN_NUM));
 
   time[0] = stoi(conf.getValue(TIME_TRY));
   time[1] = stoi(conf.getValue(TIME_GENERATIONS));
@@ -50,10 +51,10 @@ int Simulator::setConfig(Config &conf) {
 }
 
 bool Simulator::checkConfig() {
-  if (zones[0] == 0 || zones[1] == 0 || zones[2] == 0 || zones[3] == 0 ||
-      width == 0 || num_area == 0 || num_robot == 0 ||
-      time[0] == 0 || time[1] == 0 || time[2] == 0) {
-    cerr << "error checkConfig: a parameter is zero" << endl;
+  if (zones[0] <= 0 || zones[1] <= 0 || zones[2] <= 0 || zones[3] <= 0 ||
+      width <= 0 || num_area <= 0 || num_robot <= 0 || num_token <= 0 ||
+      time[0] <= 0 || time[1] <= 0 || time[2] <= 0) {
+    cerr << "error checkConfig: a parameter lowerequals zero" << endl;
     return false;
   }
 
@@ -113,6 +114,11 @@ int Simulator::simulate() {
 int Simulator::init_areas(int width, int length, int num) {
   Area area(width, length);
   areas.resize(num, area);
+  for (auto &area : areas) {
+    for (int t = 0; t < num_token; t++) {
+      newToken(area);
+    }
+  }
   return 1;
 }
 
@@ -194,9 +200,7 @@ int Simulator::step_robot(Robot &rob, int area) {
   Action a = engine->nextAction(getZone(rob), rob.isCarrying());
   if (a.dir != 0) {
     if (!hasRobotAt(area, rob.getX(), rob.getY() + a.dir)) {
-      //cout << a.dir << " y: " << rob.getY() << " -> ";
       a.dir > 0 ? rob.moveForward() : rob.moveBackward();
-      //cout << rob.getY() << endl;
     }
   } else {  // random walk
     int newX = rob.getX() + (rand()%2 -1);
@@ -218,10 +222,16 @@ int Simulator::dropItem(Robot &rob, int area) {
   rob.carry(false);
   int x = rob.getX();
   int y = rob.getY();
-  if (getZone(y) == 2) {
+  int dropZone = getZone(y);
+  if (dropZone == 2) {
     y = zones[1];
   }
-  ++areas[area][x][y];
+  if (dropZone == 0) {
+    newToken(areas[area]);
+    // TODO result +1
+  } else {
+    ++areas[area][x][y];
+  }
   return 1;
 }
 
@@ -231,4 +241,10 @@ int Simulator::pickUpItem(Robot &rob, int area) {
     --areas.at(area)[rob.getX()][rob.getY()];
   }
   return 1;
+}
+
+int Simulator::newToken(Area &area) {
+  int x = rand() % width;
+  int y = rand() % (zones[3] - zones[2]) + zones[2];
+  ++area[x][y];
 }

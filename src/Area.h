@@ -28,12 +28,12 @@ struct Area{
   }
 
 
-  std::vector< int > operator[](const int i) {
+  std::vector< int >& operator[](const int i) {
     std::lock_guard<std::mutex> lock(area_mutex);
     return area[i];
   }
 
-  const std::vector< int > operator[](const int i) const{
+  const std::vector< int >& operator[](const int i) const{
     return area[i];
   }
 };

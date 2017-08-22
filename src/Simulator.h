@@ -22,7 +22,7 @@ class Simulator{
  private:
   bool inited = false;
   int width = 0, height = 0;
-  int num_area = 0, num_robot = 0;
+  int num_area = 0, num_robot = 0, num_token = 0;
   int zones[4];
   int time[3];
 
@@ -42,6 +42,7 @@ class Simulator{
   int getZone(int x);
   int getZone(Robot &r);
   bool hasRobotAt(int areaIndex, int x, int y);
+  int newToken(Area &area);
 
   void printArea(int index);
 };
