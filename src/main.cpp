@@ -21,7 +21,7 @@ int checkHelp(int argc, char* argv[]) {
   }
 }
 
-int createVisualization() {
+int createWindow(Visualization &viz) {
   std::cout << "Starting GUI" << std::endl;
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("miTaPaSS");
 
@@ -30,9 +30,8 @@ int createVisualization() {
   window.set_default_size(400, 200);
   window.set_title("miTaPaSS");
 
-  Visualization area;
-  window.add(area);
-  area.show();
+  window.add(viz);
+  viz.show();
   return app->run(window);
 }
 
@@ -48,11 +47,11 @@ int main(int argc, char* argv[]) {
 
   Config conf(configFile);
   Simulator sim(conf);
-
-  // std::thread t{createVisualization};
+  //Visualization viz;
+  //std::threaq t(createWindow, std::ref(viz));
   sim.simulate();
 
 
-  // t.join();
+  //t.join();
   return 0;
 }

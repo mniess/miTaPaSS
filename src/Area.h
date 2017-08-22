@@ -7,6 +7,9 @@
 struct Area{
   std::vector< std::vector< int > > area;
   std::mutex area_mutex;
+
+  Area() { }
+
   Area(int width, int length) {
     std::vector< std::vector< int > > a(width, std::vector<int>(length, 0));
     area = a;
@@ -25,6 +28,10 @@ struct Area{
       return;
     }
     area = a.area;
+  }
+
+  int size() {
+    return area.size();
   }
 
 
