@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "bin/Config.h"
-#include "src/Action.h"
 #include "src/Robot.h"
 #include "src/Area.h"
 #include "src/RobotEngine.h"
@@ -197,10 +196,10 @@ void Simulator::printArea(int index) {
 }
 
 int Simulator::step_robot(Robot &rob, int area) {
-  Action a = engine->nextAction(getZone(rob), rob.isCarrying());
-  if (a.dir != 0) {
-    if (!hasRobotAt(area, rob.getX(), rob.getY() + a.dir)) {
-      a.dir > 0 ? rob.moveForward() : rob.moveBackward();
+  engine -> nextAction(getZone(rob), rob);
+  if (rob.getDir() != 0) {
+    if (!hasRobotAt(area, rob.getX(), rob.getY() + rob.getDir())) {
+      rob.getDir() > 0 ? rob.moveForward() : rob.moveBackward();
     }
   } else {  // random walk
     int newX = rob.getX() + (rand()%2 -1);
@@ -210,9 +209,9 @@ int Simulator::step_robot(Robot &rob, int area) {
     }
   }
 
-  if (rob.isCarrying() && !a.pickUp) {
+  if (rob.isCarrying() && rob.getDrop()) {
     dropItem(rob, area);
-  } else if (!rob.isCarrying() && a.pickUp) {
+  } else if (!rob.isCarrying() && !rob.getDrop()) {
     pickUpItem(rob, area);
   }
   return 1;
