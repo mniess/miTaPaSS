@@ -95,8 +95,10 @@ int Simulator::simulate() {
           for (int area = 0; area < num_area; area++) {
             for (auto &rob : robots[area]) {
               step_robot(rob, area);
+              cout << rob;
             }
           }
+          cout << "step " << run+1 << endl;
           printArea(0);
         }
         printf("Generation %i of %i finished!\n", gen+1, time[1]);
@@ -214,6 +216,7 @@ int Simulator::step_robot(Robot &rob, int area) {
   } else if (!rob.isCarrying() && !rob.getDrop()) {
     pickUpItem(rob, area);
   }
+  rob.drop = false;
   return 1;
 }
 
@@ -231,11 +234,13 @@ int Simulator::dropItem(Robot &rob, int area) {
   } else {
     ++areas[area][x][y];
   }
+  cout << "dropped at: " << x << "," << y << endl;
   return 1;
 }
 
 int Simulator::pickUpItem(Robot &rob, int area) {
   if (areas.at(area)[rob.getX()][rob.getY()] > 0) {
+    cout << "picking up: " << rob.getX() << "," << rob.getY() << endl;
     rob.carry(true);
     --areas.at(area)[rob.getX()][rob.getY()];
   }

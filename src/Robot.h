@@ -21,10 +21,10 @@ class Robot {
   }
 
   void setPos(int newX, int newY) {
-    if (newX <= x_max && newX >= x_min) {
+    if (newX < x_max && newX >= x_min) {
       x = newX;
     }
-    if (newY <= y_max && newY >= y_min) {
+    if (newY < y_max && newY >= y_min) {
       y = newY;
     }
   }
@@ -52,9 +52,6 @@ class Robot {
   }
 
   void carry(bool c) {
-    if (carrying && !c) {
-      drop = false;
-    }
     carrying = c;
   }
 
@@ -90,10 +87,23 @@ class Robot {
     drop = d;
   }
 
+  friend std::ostream& operator<< (std::ostream &out, const Robot &r){
+    return out
+      << "Rob(" << r.x << ", " << r.y << "):"
+      << " c=" << r.carrying
+      << " d=" << r.drop
+      << " dir=" << r.dir
+      << " m1=" << r.motivation1
+      << " m2=" << r.motivation2
+      << std::endl;
+  }
+
  private:
   int x, y;
   int x_min, x_max, y_min, y_max;
   float motivation1 = 0, motivation2 = 0;
 };
+
+//std::ostream& operator<<(std::ostream &strm, const Robot &r)
 
 #endif  // SRC_ROBOT_H_
