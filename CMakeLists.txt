@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 PROJECT(miTaPaSS)
 
 set (MITAPASS_VERSION_MAJOR 0)
-set (MITAPASS_VERSION_MINOR 1)
+set (MITAPASS_VERSION_MINOR 2)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/ )
 
@@ -30,7 +30,8 @@ SET(MITAPASS_SRC
 	${PROJECT_SOURCE_DIR}/src/Config.cpp
 	${PROJECT_SOURCE_DIR}/src/Simulator.cpp
 	${PROJECT_SOURCE_DIR}/src/FerranteFake.cpp
-	${PROJECT_SOURCE_DIR}/src/Visualization.cpp
+	${PROJECT_SOURCE_DIR}/src/ManualEngine.cpp
+  ${PROJECT_SOURCE_DIR}/src/Resultor.cpp
 	${RESOURCE_FILE}
 )
 

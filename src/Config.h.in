@@ -7,7 +7,7 @@
 #define VERSION_MAJOR @MITAPASS_VERSION_MAJOR@
 #define VERSION_MINOR @MITAPASS_VERSION_MINOR@
 
-
+//SETTINGS
 #define AREA_NUM "area_num"
 #define TOKEN_NUM "token_num"
 #define ROBOT_NUM "robot_num"
@@ -24,8 +24,16 @@
 #define TIME_RUN "time_run"
 
 #define ENGINE "engine"
+#define VISUALIZATION "visualization"
 
+//OPTIONS
 #define ENGINE_FERRANTE "ferrante"
+#define ENGINE_MANUAL "manual"
+
+#define VIZ_ANIMATE "animate"
+#define VIZ_NONE "none"
+#define VIZ_MANUAL "manual"
+
 class Config{
  public:
   Config();

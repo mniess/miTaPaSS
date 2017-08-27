@@ -8,6 +8,7 @@
 #include "src/Area.h"
 #include "src/Robot.h"
 #include "src/RobotEngine.h"
+#include "src/Resultor.h"
 
 class Simulator{
  public:
@@ -25,10 +26,13 @@ class Simulator{
   int num_area = 0, num_robot = 0, num_token = 0;
   int zones[4];
   int time[3];
+  int visualize = 0;
 
   RobotEngine *engine = NULL;
+  Resultor res;
   std::vector< Area > areas;
   std::vector< std::vector<Robot> > robots;
+
 
   int setConfig(Config &conf);
   bool checkConfig();
@@ -42,9 +46,10 @@ class Simulator{
   int getZone(int x);
   int getZone(Robot &r);
   bool hasRobotAt(int areaIndex, int x, int y);
-  int newToken(Area &area);
+  int newToken(int areaIndex);
 
   void printArea(int index);
+  int viz(int index, int area);
 };
 
 #endif  // SRC_SIMULATOR_H_

@@ -5,14 +5,17 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <string>
 
 #include "bin/Config.h"
 #include "src/Robot.h"
 #include "src/Area.h"
 #include "src/RobotEngine.h"
 #include "src/FerranteFake.h"
+#include "src/ManualEngine.h"
+#include "src/Resultor.h"
 
-using std::vector;
+using std::vector, std::string;
 using std::cerr, std::cout, std::endl;
 
 Simulator::Simulator() {
@@ -42,10 +45,21 @@ int Simulator::setConfig(Config &conf) {
   time[1] = stoi(conf.getValue(TIME_GENERATIONS));
   time[2] = stoi(conf.getValue(TIME_RUN));
 
-  if (conf.getValue(ENGINE) == ENGINE_FERRANTE) {
+  string s = conf.getValue(ENGINE);
+  if (s == ENGINE_FERRANTE) {
     engine = new FerranteFake();
+  } else if (s == ENGINE_MANUAL) {
+    engine = new ManualEngine();
   }
 
+  s = conf.getValue(VISUALIZATION);
+  if (s == VIZ_NONE) {
+    visualize = 0;
+  } else if (s == VIZ_ANIMATE) {
+    visualize = 1;
+  } else if (s == VIZ_MANUAL) {
+    visualize = 2;
+  }
   return checkConfig();
 }
 
@@ -77,47 +91,41 @@ bool Simulator::checkConfig() {
 }
 
 int Simulator::init() {
-  cout << "Init Simulation" << endl;
-  inited = false;
-  if (init_areas(width, height, num_area) && init_robots(num_robot)) {
-    inited = true;
-    printArea(0);
-  }
-  return inited;
+  res = Resultor(num_area);
+  init_areas(width, height, num_area);
+  init_robots(num_robot);
+  return 1;
 }
 
 int Simulator::simulate() {
-  if (inited || init()) {
-    cout << "Simulating" << endl;
+  cout << "\e[2J";
     for (int t = 0; t < time[0]; t++) {
       for (int gen = 0; gen < time[1]; gen++) {
+        init();
         for (int run = 0; run < time[2]; run++) {
           for (int area = 0; area < num_area; area++) {
             for (auto &rob : robots[area]) {
               step_robot(rob, area);
-              //cout << rob;
             }
           }
-          cout << "step " << run+1 << endl;
-          printArea(0);
+          if (visualize) {
+            viz(run, 0);
+          }
         }
         printf("Generation %i of %i finished!\n", gen+1, time[1]);
+        res.printResults(0);
       }
       printf("Try %i of %i finished!\n", t+1, time[0]);
     }
-  } else {
-    cerr << "error simulate: could not init" << endl;
-    return 0;
-  }
   return 1;
 }
 
 int Simulator::init_areas(int width, int length, int num) {
   Area area(width, length);
   areas.resize(num, area);
-  for (auto &area : areas) {
+  for (int a = 0; a < num_area; a++) {
     for (int t = 0; t < num_token; t++) {
-      newToken(area);
+      newToken(a);
     }
   }
   return 1;
@@ -127,7 +135,6 @@ int Simulator::init_robots(int numberOnArea) {
   Robot r(0, 0, 0, width, 0, height);
   std::vector<Robot> vr(numberOnArea, r);
   robots.resize(areas.size(), vr);
-cout << areas.size() << " " << robots.size() << " " << robots[0].size() << endl;
   for (int i = 0; i < areas.size(); i++) {
     int robs = 0;
     while (robs < numberOnArea) {
@@ -204,8 +211,8 @@ int Simulator::step_robot(Robot &rob, int area) {
       rob.getDir() > 0 ? rob.moveForward() : rob.moveBackward();
     }
   } else {  // random walk
-    int newX = rob.getX() + (rand()%2 -1);
-    int newY = rob.getY() + (rand()%2 -1);
+    int newX = rob.getX() + (rand()%3 -1);
+    int newY = rob.getY() + (rand()%3 -1);
     if (!hasRobotAt(area, newX, newY)) {
       rob.setPos(newX, newY);
     }
@@ -229,26 +236,68 @@ int Simulator::dropItem(Robot &rob, int area) {
     y = zones[1];
   }
   if (dropZone == 0) {
-    newToken(areas[area]);
-    // TODO result +1
+    res.tokenInNest(area);
   } else {
     ++areas[area][x][y];
+    if (dropZone != 3) {
+      res.byPartitioning(area, true);
+    }
   }
-  cout << "dropped: " << rob;
   return 1;
 }
 
 int Simulator::pickUpItem(Robot &rob, int area) {
   if (areas.at(area)[rob.getX()][rob.getY()] > 0) {
-    cout << "picking up: " << rob;
     rob.carry(true);
     --areas.at(area)[rob.getX()][rob.getY()];
+    newToken(area);
+    if (getZone(rob) != 3) {
+      res.byPartitioning(area, false);
+    }
   }
   return 1;
 }
 
-int Simulator::newToken(Area &area) {
+int Simulator::newToken(int area) {
   int x = rand() % width;
   int y = rand() % (zones[3] - zones[2]) + zones[2];
-  ++area[x][y];
+  ++areas[area][x][y];
+  res.tokenCreated(area);
+}
+
+int Simulator::viz(int step, int area) {
+  cout << "\e[0;0H";  // Set pos to 0,0
+  cout << "Gen: " << step << endl;
+  Area a = areas.at(area);
+  int old = 0;
+  for (int i = 0; i < height; i++) {
+    int n = getZone(i);
+    if (n == old) {
+      cout << " " << n;
+    } else {
+      old = n;
+      cout << "|" << n;
+    }
+  }
+  cout << endl;
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      if (hasRobotAt(area, i, j)) {
+        cout << " *";
+      } else {
+        cout << " " << a[i][j];
+      }
+    }
+    cout << endl;
+  }
+
+  for (auto &rob : robots[area]) {
+    cout << rob;
+  }
+  res.printResults(area);
+  if (visualize == 2) {
+    std::cin.get();
+  }
+
+  return 1;
 }
