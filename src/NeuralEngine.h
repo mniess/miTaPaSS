@@ -14,7 +14,7 @@ using std::vector;
 class NeuralEngine: public RobotEngine {
  public:
   void init(int areas);
-  void nextAction(int area, int zone, Robot rob);
+  void nextAction(int area, int zone, Robot &rob);
   void train(Resultor r);
  private:
   int popSize = 0;

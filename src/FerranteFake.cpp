@@ -4,7 +4,7 @@
 #include "src/FerranteFake.h"
 #include "src/Robot.h"
 
-void FerranteFake::nextAction(int area, int zone, Robot rob) {
+void FerranteFake::nextAction(int area, int zone, Robot &rob) {
   std::string text = "";
   // Evolved controller 20
   // R1

@@ -3,7 +3,7 @@
 #include "src/ManualEngine.h"
 #include "src/Robot.h"
 
-void ManualEngine::nextAction(int area, int zone, Robot rob) {
+void ManualEngine::nextAction(int area, int zone, Robot &rob) {
   if (rob.isCarrying()) {
     rob.dir = -1;
     if (zone == 0) {

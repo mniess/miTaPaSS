@@ -30,7 +30,7 @@ void NeuralEngine::init(int areas) {
   // TODO Load old weights
 }
 
-void NeuralEngine::nextAction(int area, int zone, Robot rob) {
+void NeuralEngine::nextAction(int area, int zone, Robot &rob) {
   float input0 = zone+1;
   float input1 = rob.carrying;
   float input2 = rob.getMotivation1();
@@ -38,7 +38,6 @@ void NeuralEngine::nextAction(int area, int zone, Robot rob) {
   rob.dir = output0;
   rob.drop = output1;
   rob.addMotivation1(output2);
-  cout << rob;
 }
 
 void NeuralEngine::train(Resultor r) {
