@@ -27,6 +27,7 @@ class Simulator{
   int zones[4];
   int time[3];
   int visualize = 0;
+  Config conf;
 
   RobotEngine *engine = NULL;
   Resultor res;

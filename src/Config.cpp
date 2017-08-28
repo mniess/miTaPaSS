@@ -91,9 +91,8 @@ vector<vector<float> > Config::loadWeights(std::string file) {
       cout << endl;
     }
 
-
     return weights;
   } else {
-    std::cerr << "error opening configfile" << std::endl;
+    std::cerr << "error opening file " << file << std::endl;
   }
 }

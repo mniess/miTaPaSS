@@ -7,8 +7,6 @@
 
 class ManualEngine: public RobotEngine {
  public:
-  void init(int areas) {}
-  void nextAction(int area, int zone, Robot &rob);
-  void train(Resultor r) {}
+  void nextAction(int area, int zone, Robot &rob) override;
 };
 #endif  // SRC_MANUALENGINE_H_

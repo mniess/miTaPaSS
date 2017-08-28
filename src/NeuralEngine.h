@@ -5,6 +5,7 @@
 #include "src/RobotEngine.h"
 #include "src/Robot.h"
 #include "src/Resultor.h"
+#include "bin/Config.h"
 
 #define LAYERS 3
 #define CONNECTIONS 6
@@ -13,11 +14,12 @@ using std::vector;
 
 class NeuralEngine: public RobotEngine {
  public:
-  void init(int areas);
-  void nextAction(int area, int zone, Robot &rob);
-  void train(Resultor r);
+  void init(int areas, Config &conf) override;
+  void nextAction(int area, int zone, Robot &rob) override;
+  void train(Resultor r) override;
  private:
   int popSize = 0;
+  Config conf;
   vector<vector<vector<float> > > weight;
   vector<vector<vector<float> > > newWeight;
 

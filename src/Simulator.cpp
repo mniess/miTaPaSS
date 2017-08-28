@@ -31,6 +31,7 @@ Simulator::~Simulator() {
 }
 
 int Simulator::setConfig(Config &conf) {
+  this->conf = conf;
   zones[0] = stoi(conf.getValue(ZONE_NEST_END));
   zones[1] = stoi(conf.getValue(ZONE_CACHE_END));
   zones[2] = stoi(conf.getValue(ZONE_SLOPE_END));
@@ -103,7 +104,7 @@ int Simulator::init() {
 int Simulator::simulate() {
   cout << "\e[2J";
     for (int t = 0; t < time[0]; t++) {
-      engine ->init(num_area);
+      engine ->init(num_area, conf);
       for (int gen = 0; gen < time[1]; gen++) {
         init();
         for (int run = 0; run < time[2]; run++) {

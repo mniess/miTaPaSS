@@ -1,5 +1,6 @@
 #include "src/NeuralEngine.h"
 
+#include <string>
 #include "iostream"
 #include "math.h"
 #include "vector"
@@ -11,11 +12,13 @@
 using std::vector;
 using std::cout, std::endl;
 
-void NeuralEngine::init(int areas) {
+void NeuralEngine::init(int areas, Config &conf) {
   popSize = areas;
-  if (false) {
-    Config conf;
-    weight = vector<vector<vector<float> > >(popSize,conf.loadWeights("weights.txt"));
+  this->conf = conf;
+  std::string fileN = conf.getValue(LOADFILE);
+  if (fileN != NOFILE && fileN != "") {
+    cout << "loading weights from file " << fileN << endl;
+    weight = vector<vector<vector<float> > >(popSize,conf.loadWeights(fileN));
   } else {
     weight =
       vector<vector<vector<float> > >(popSize,
@@ -45,8 +48,10 @@ void NeuralEngine::nextAction(int area, int zone, Robot &rob) {
 
 void NeuralEngine::train(Resultor r) {
   int i = r.getBestArea();
-  Config conf;
-  conf.saveWeights("weights.txt", weight[i]);
+  std::string sf = conf.getValue(SAVEFILE);
+  if (sf != NOFILE && sf != "") {
+    conf.saveWeights(sf, weight[i]);
+  }
   selectAndMutate(i, r);
 }
 

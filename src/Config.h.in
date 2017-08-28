@@ -27,6 +27,9 @@
 #define ENGINE "engine"
 #define VISUALIZATION "visualization"
 
+#define LOADFILE "loadFile"
+#define SAVEFILE "saveFile"
+
 //OPTIONS
 #define ENGINE_FERRANTE "ferrante"
 #define ENGINE_MANUAL "manual"
@@ -35,6 +38,8 @@
 #define VIZ_ANIMATE "animate"
 #define VIZ_NONE "none"
 #define VIZ_MANUAL "manual"
+
+#define NOFILE "none"
 
 using std::vector;
 
