@@ -16,6 +16,7 @@ class Resultor {
   std::vector<int> getResults(int area);
   void printResults();
   int getBestArea();
+  int getFitness(int area);
  private:
   std::vector<std::vector<int> > results;
 };

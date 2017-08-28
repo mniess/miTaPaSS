@@ -31,13 +31,14 @@ void NeuralEngine::init(int areas) {
 }
 
 void NeuralEngine::nextAction(int area, int zone, Robot rob) {
-  float input0 = zone;
+  float input0 = zone+1;
   float input1 = rob.carrying;
   float input2 = rob.getMotivation1();
   propagate(area, input0, input1, input2);
   rob.dir = output0;
   rob.drop = output1;
   rob.addMotivation1(output2);
+  cout << rob;
 }
 
 void NeuralEngine::train(Resultor r) {
@@ -56,11 +57,11 @@ void NeuralEngine::propagate(int ind, float input0, float input1, float input2) 
   float hidden_net0, hidden_net1;
   float i_layer_0, i_layer_1, i_layer_2;
   float o_layer_0, o_layer_1, o_layer_2;
-
+  // fprintf(stdout, "Input:  %f %f %f\n",input0,input1,input2);
   i_layer_0 = activation(input0*weight[ind][0][0]);  // -weight[ind][0][3]);
   i_layer_1 = activation(input1*weight[ind][0][1]);  // -weight[ind][0][4]);
   i_layer_2 = activation(input2*weight[ind][0][2]);  // -weight[ind][0][5]);
-
+  // fprintf(stdout, "ILayer: %f %f %f\n",i_layer_0,i_layer_1,i_layer_2);
   hidden_net0 =
     i_layer_0*weight[ind][1][0] +
     i_layer_1*weight[ind][1][1] +
@@ -69,7 +70,7 @@ void NeuralEngine::propagate(int ind, float input0, float input1, float input2) 
     i_layer_0*weight[ind][1][3] +
     i_layer_1*weight[ind][1][4] +
     i_layer_2*weight[ind][1][5];
-
+  // fprintf(stdout, "Hidden: %f %f\n",hidden_net0,hidden_net1);
   o_layer_0 =
     activation(hidden_net0)*weight[ind][2][0] +
     activation(hidden_net1)*weight[ind][2][1];
@@ -79,10 +80,11 @@ void NeuralEngine::propagate(int ind, float input0, float input1, float input2) 
   o_layer_2 =
     activation(hidden_net0)*weight[ind][2][4] +
     activation(hidden_net1)*weight[ind][2][5];
-
-  output0 = (int) round(activation(o_layer_0));
+  // fprintf(stdout, "OLayer: %f %f %f\n",o_layer_0,o_layer_1,o_layer_2);
+  output0 = static_cast<int>(round(activation(o_layer_0)));
   output1 = o_layer_1 > 0;
   output2 = activation(o_layer_2);
+  // fprintf(stdout, "Out: %i %s %f\n",output0,output1?"true":"false",output2);
 }
 
 void NeuralEngine::selectAndMutate(int maxID, Resultor res) {
@@ -92,13 +94,11 @@ void NeuralEngine::selectAndMutate(int maxID, Resultor res) {
   int i, j, k, ind;
 
   for (ind=0; ind < popSize; ind++) {
-    sum1 += res.getResults(ind)[data::tokenInNest];
-    sum1++;
+    sum1 += res.getFitness(ind);
   }
 
   for (ind=0; ind < popSize; ind++) {
-    sum2++;
-    sum2 += res.getResults(ind)[data::tokenInNest];
+    sum2 += res.getFitness(ind);
     p[ind] = sum2/sum1;
   }
 
