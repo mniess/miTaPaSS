@@ -13,21 +13,24 @@ using std::cout, std::endl;
 
 void NeuralEngine::init(int areas) {
   popSize = areas;
-  weight =
-    vector<vector<vector<float> > >(popSize,
-      vector<vector<float> >(LAYERS,
-        vector<float>(CONNECTIONS)));
-  newWeight = vector<vector<vector<float> > >(weight);
-
-  // random weights [-0.5;0.5]
-  for (int ind=0; ind < popSize; ind++) {
-    for (int j=0; j < LAYERS; j++) {
-      for (int k=0; k < CONNECTIONS; k++) {
-        weight[ind][j][k] = (float)rand()/(float)RAND_MAX - 0.5;
+  if(false) {
+    Config conf;
+    weight = vector<vector<vector<float> > >(popSize,conf.loadWeights("weights.txt"));
+  } else {
+    weight =
+      vector<vector<vector<float> > >(popSize,
+        vector<vector<float> >(LAYERS,
+          vector<float>(CONNECTIONS)));
+    //random weights [-0.5;0.5]
+    for (int ind=0; ind < popSize; ind++) {
+      for (int j=0; j < LAYERS; j++) {
+        for (int k=0; k < CONNECTIONS; k++) {
+          weight[ind][j][k] = (float)rand()/(float)RAND_MAX - 0.5;
+        }
       }
     }
   }
-  // TODO Load old weights
+  newWeight = vector<vector<vector<float> > >(weight);
 }
 
 void NeuralEngine::nextAction(int area, int zone, Robot &rob) {

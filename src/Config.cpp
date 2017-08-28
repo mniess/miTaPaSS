@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+using std::vector, std::string;
+using std::cout, std::endl;
+
 Config::Config() {
 }
 
@@ -63,9 +66,34 @@ int Config::saveWeights(std::string filename, vector<vector<float> > weights) {
     std::cerr << "error opening configfile" << std::endl;
     return 0;
   }
-
-
 }
-vector<vector<float> > Config::loadWeights(std::string file) {
 
+vector<vector<float> > Config::loadWeights(std::string file) {
+  vector<vector<float> > weights;
+  std::ifstream ifs(file, std::ifstream::in);
+  if (ifs.is_open()) {
+    std::string line;
+    while ( std::getline(ifs, line) ) {
+      vector<float> v;
+      std::istringstream iss(line);
+      std::string val;
+      while ( std::getline(iss, val, ' ') ) {
+        v.push_back(std::stof(val));
+      }
+      weights.push_back(v);
+    }
+    ifs.close();
+
+    for (int j=0; j < weights.size(); j++) {
+      for (int k=0; k < weights[j].size(); k++) {
+        cout << weights[j][k]<< " ";
+      }
+      cout << endl;
+    }
+
+
+    return weights;
+  } else {
+    std::cerr << "error opening configfile" << std::endl;
+  }
 }

@@ -36,7 +36,11 @@ std::vector<int> Resultor::getResults(int area) {
 
 void Resultor::printResults() {
   int bI = getBestArea();
-  fprintf(stdout, "Best Area with %i token in Nest\n", getFitness(bI));
+  fprintf(stdout, "Best Area with fitness %i (InNest: %i, ByPart: %i, OnArea: %i)\n",
+    getFitness(bI),
+    results[bI][data::tokenInNest],
+    results[bI][data::tokenInNestByPartitioning],
+    results[bI][data::tokenOnArea]);
 }
 
 int Resultor::getBestArea() {
@@ -52,9 +56,8 @@ int Resultor::getBestArea() {
 }
 
 int Resultor::getFitness(int area) {
-  return
-    5 * results[area][data::tokenInNest] +
-    1 * results[area][data::tokenInNestByPartitioning] +
-    2 * results[area][data::tokenOnArea] +
-    1;
+  return results[area][data::tokenInNest] + 1;
+    // 5 * results[area][data::tokenInNest] +
+    // 1 * results[area][data::tokenInNestByPartitioning] +
+    // 1;
 }
