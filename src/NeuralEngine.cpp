@@ -13,7 +13,7 @@ using std::cout, std::endl;
 
 void NeuralEngine::init(int areas) {
   popSize = areas;
-  if(false) {
+  if (false) {
     Config conf;
     weight = vector<vector<vector<float> > >(popSize,conf.loadWeights("weights.txt"));
   } else {

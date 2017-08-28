@@ -243,9 +243,6 @@ int Simulator::dropItem(Robot &rob, int area) {
     newToken(area);
   } else {
     ++areas[area][x][y];
-    if (dropZone != 3) {
-      res.byPartitioning(area, true);
-    }
   }
   return 1;
 }
@@ -254,8 +251,8 @@ int Simulator::pickUpItem(Robot &rob, int area) {
   if (areas.at(area)[rob.getX()][rob.getY()] > 0) {
     rob.carry(true);
     --areas.at(area)[rob.getX()][rob.getY()];
-    if (getZone(rob) != 3) {
-      res.byPartitioning(area, false);
+    if (getZone(rob) == 2) {
+      res.byPartitioning(area, true);
     }
   }
   return 1;
