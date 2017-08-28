@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #define VERSION_MAJOR @MITAPASS_VERSION_MAJOR@
 #define VERSION_MINOR @MITAPASS_VERSION_MINOR@
@@ -29,10 +30,13 @@
 //OPTIONS
 #define ENGINE_FERRANTE "ferrante"
 #define ENGINE_MANUAL "manual"
+#define ENGINE_NEURAL "neural"
 
 #define VIZ_ANIMATE "animate"
 #define VIZ_NONE "none"
 #define VIZ_MANUAL "manual"
+
+using std::vector;
 
 class Config{
  public:
@@ -41,6 +45,9 @@ class Config{
 
   int readConfig(std::string file);
   std::string getValue(std::string key);
+
+  int saveWeights(std::string file, vector<vector<float> >);
+  vector<vector<float> > loadWeights(std::string file);
  private:
   std::map<std::string,std::string> values;
 

@@ -13,6 +13,8 @@ CACHE PATH "CMakeLists.txt files optimized for this directory! Please do not cha
 SET(EXECUTABLE_OUTPUT_PATH ../bin
 CACHE PATH "CMakeLists.txt files optimized for this directory! Please do not change.")
 
+set(CMAKE_CXX_STANDARD 17)
+
 configure_file (
 	"${PROJECT_SOURCE_DIR}/src/Config.h.in"
 	"${PROJECT_SOURCE_DIR}/bin/Config.h"
@@ -31,11 +33,11 @@ SET(MITAPASS_SRC
 	${PROJECT_SOURCE_DIR}/src/Simulator.cpp
 	${PROJECT_SOURCE_DIR}/src/FerranteFake.cpp
 	${PROJECT_SOURCE_DIR}/src/ManualEngine.cpp
-  ${PROJECT_SOURCE_DIR}/src/Resultor.cpp
+	${PROJECT_SOURCE_DIR}/src/NeuralEngine.cpp
+	${PROJECT_SOURCE_DIR}/src/Resultor.cpp
 	${RESOURCE_FILE}
 )
 
-set(CMAKE_CXX_STANDARD 17)
 ADD_EXECUTABLE(miTaPaSS ${MITAPASS_SRC})
 
 target_link_libraries(miTaPaSS ${CMAKE_THREAD_LIBS_INIT})

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 Config::Config() {
 }
@@ -44,4 +45,27 @@ int Config::readConfig(std::string file) {
     std::cerr << "error opening configfile" << std::endl;
     return 0;
   }
+}
+
+int Config::saveWeights(std::string filename, vector<vector<float> > weights) {
+  std::ofstream ofs;
+  ofs.open(filename, std::ios::out|std::ios::trunc);
+  if (ofs.is_open()) {
+    for (int i = 0; i < weights.size(); i++) {
+      for (int j = 0; j < weights[i].size(); j++) {
+        ofs << weights[i][j] << " ";
+      }
+      ofs << std::endl;
+    }
+    ofs.close();
+    return 1;
+  } else {
+    std::cerr << "error opening configfile" << std::endl;
+    return 0;
+  }
+
+
+}
+vector<vector<float> > Config::loadWeights(std::string file) {
+
 }

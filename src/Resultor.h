@@ -14,7 +14,8 @@ class Resultor {
   void tokenCreated(int area);
   void step();
   std::vector<int> getResults(int area);
-  void printResults(int area);
+  void printResults();
+  int getBestArea();
  private:
   std::vector<std::vector<int> > results;
 };

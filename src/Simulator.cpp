@@ -13,6 +13,7 @@
 #include "src/RobotEngine.h"
 #include "src/FerranteFake.h"
 #include "src/ManualEngine.h"
+#include "src/NeuralEngine.h"
 #include "src/Resultor.h"
 
 using std::vector, std::string;
@@ -50,6 +51,8 @@ int Simulator::setConfig(Config &conf) {
     engine = new FerranteFake();
   } else if (s == ENGINE_MANUAL) {
     engine = new ManualEngine();
+  } else if (s == ENGINE_NEURAL) {
+    engine = new NeuralEngine();
   }
 
   s = conf.getValue(VISUALIZATION);
@@ -100,6 +103,7 @@ int Simulator::init() {
 int Simulator::simulate() {
   cout << "\e[2J";
     for (int t = 0; t < time[0]; t++) {
+      engine ->init(num_area);
       for (int gen = 0; gen < time[1]; gen++) {
         init();
         for (int run = 0; run < time[2]; run++) {
@@ -113,7 +117,8 @@ int Simulator::simulate() {
           }
         }
         printf("Generation %i of %i finished!\n", gen+1, time[1]);
-        res.printResults(0);
+        res.printResults();
+        engine->train(res);
       }
       printf("Try %i of %i finished!\n", t+1, time[0]);
     }
@@ -132,9 +137,7 @@ int Simulator::init_areas(int width, int length, int num) {
 }
 
 int Simulator::init_robots(int numberOnArea) {
-  Robot r(0, 0, 0, width, 0, height);
-  std::vector<Robot> vr(numberOnArea, r);
-  robots.resize(areas.size(), vr);
+  robots = std::vector<std::vector<Robot> >(areas.size(), std::vector<Robot>(numberOnArea, Robot(0, 0, 0, width, 0, height)));
   for (int i = 0; i < areas.size(); i++) {
     int robs = 0;
     while (robs < numberOnArea) {
@@ -205,7 +208,7 @@ void Simulator::printArea(int index) {
 }
 
 int Simulator::step_robot(Robot &rob, int area) {
-  engine -> nextAction(getZone(rob), rob);
+  engine -> nextAction(area, getZone(rob), rob);
   if (rob.getDir() != 0) {
     if (!hasRobotAt(area, rob.getX(), rob.getY() + rob.getDir())) {
       rob.getDir() > 0 ? rob.moveForward() : rob.moveBackward();
@@ -294,7 +297,7 @@ int Simulator::viz(int step, int area) {
   for (auto &rob : robots[area]) {
     cout << rob;
   }
-  res.printResults(area);
+  res.printResults();
   if (visualize == 2) {
     std::cin.get();
   }
