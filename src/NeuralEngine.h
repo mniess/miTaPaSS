@@ -18,6 +18,7 @@ class NeuralEngine: public RobotEngine {
   void nextAction(int area, int zone, Robot &rob) override;
   void train(Resultor r) override;
  private:
+  int gen = 0;
   int popSize = 0;
   Config conf;
   vector<vector<vector<float> > > weight;
@@ -29,7 +30,10 @@ class NeuralEngine: public RobotEngine {
 
   float activation(float x);
   void propagate(int ind, float input0, float input1, float input2);
-  void selectAndMutate(int maxID, Resultor res);
+  void selectAndMutate(Resultor res);
   void printWeights();
+  void initWeights();
+  void saveGen(Resultor res);
+  bool loadWeights();
 };
 #endif  // SRC_NEURALENGINE_H_

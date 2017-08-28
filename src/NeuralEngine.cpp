@@ -2,6 +2,8 @@
 
 #include <string>
 #include "iostream"
+#include "fstream"
+#include <sstream>
 #include "math.h"
 #include "vector"
 
@@ -15,25 +17,7 @@ using std::cout, std::endl;
 void NeuralEngine::init(int areas, Config &conf) {
   popSize = areas;
   this->conf = conf;
-  std::string fileN = conf.getValue(LOADFILE);
-  if (fileN != NOFILE && fileN != "") {
-    cout << "loading weights from file " << fileN << endl;
-    weight = vector<vector<vector<float> > >(popSize,conf.loadWeights(fileN));
-  } else {
-    weight =
-      vector<vector<vector<float> > >(popSize,
-        vector<vector<float> >(LAYERS,
-          vector<float>(CONNECTIONS)));
-    //random weights [-0.5;0.5]
-    for (int ind=0; ind < popSize; ind++) {
-      for (int j=0; j < LAYERS; j++) {
-        for (int k=0; k < CONNECTIONS; k++) {
-          weight[ind][j][k] = (float)rand()/(float)RAND_MAX - 0.5;
-        }
-      }
-    }
-  }
-  newWeight = vector<vector<vector<float> > >(weight);
+  initWeights();
 }
 
 void NeuralEngine::nextAction(int area, int zone, Robot &rob) {
@@ -47,12 +31,8 @@ void NeuralEngine::nextAction(int area, int zone, Robot &rob) {
 }
 
 void NeuralEngine::train(Resultor r) {
-  int i = r.getBestArea();
-  std::string sf = conf.getValue(SAVEFILE);
-  if (sf != NOFILE && sf != "") {
-    conf.saveWeights(sf, weight[i]);
-  }
-  selectAndMutate(i, r);
+  saveGen(r);
+  selectAndMutate(r);
 }
 
 float NeuralEngine::activation(float x) {
@@ -94,7 +74,9 @@ void NeuralEngine::propagate(int ind, float input0, float input1, float input2) 
   // fprintf(stdout, "Out: %i %s %f\n",output0,output1?"true":"false",output2);
 }
 
-void NeuralEngine::selectAndMutate(int maxID, Resultor res) {
+void NeuralEngine::selectAndMutate(Resultor res) {
+  int maxID = res.getBestArea(gen);
+  gen++;
   float sum1 = 0.0;
   float sum2 = 0.0;
   float p[popSize], r;
@@ -152,4 +134,77 @@ void NeuralEngine::printWeights() {
     }
     cout << endl;
   }
+}
+
+
+void NeuralEngine::saveGen(Resultor res) {
+  std::string sf = conf.getValue(SAVEFILE);
+  if (sf != NOFILE && sf != "") {
+    std::ofstream ofs;
+    ofs.open(sf, std::ios::out|std::ios::app);
+    if (ofs.is_open()) {
+      ofs << gen << "; ";
+      int best = res.getBestArea();
+      ofs << best << "; ";
+      std::vector<int> stats = res.getResults();
+      ofs << stats[0] << "; " << stats[1] << "; " << stats[2] << "; ";
+      for (int i = 0; i < weight[best].size(); i++) {
+        for (int j = 0; j < weight[best][i].size(); j++) {
+          ofs << weight[best][i][j] << "; ";
+        }
+      }
+      ofs << endl;
+      ofs.close();
+    } else {
+      std::cerr << "error opening file for write " << sf << std::endl;
+    }
+  }
+}
+
+void NeuralEngine::initWeights() {
+
+  if (!loadWeights()) {
+    weight =
+      vector<vector<vector<float> > >(popSize,
+        vector<vector<float> >(LAYERS,
+          vector<float>(CONNECTIONS)));
+    //random weights [-0.5;0.5]
+    for (int ind=0; ind < popSize; ind++) {
+      for (int j=0; j < LAYERS; j++) {
+        for (int k=0; k < CONNECTIONS; k++) {
+          weight[ind][j][k] = (float)rand()/(float)RAND_MAX - 0.5;
+        }
+      }
+    }
+  }
+  newWeight = vector<vector<vector<float> > >(weight);
+}
+
+bool NeuralEngine::loadWeights() {
+  std::string lf = conf.getValue(LOADFILE);
+  if (lf != NOFILE && lf != "") {
+    cout << "loading weights from file " << lf << endl;
+    std::ifstream ifs(lf, std::ifstream::in);
+
+    if (ifs.is_open()) {
+      vector<vector<float> > weights;
+      std::string line;
+      while ( std::getline(ifs, line) ) {
+        vector<float> v;
+        std::istringstream iss(line);
+        std::string val;
+        while ( std::getline(iss, val, ' ') ) {
+          v.push_back(std::stof(val));
+        }
+        weights.push_back(v);
+      }
+      ifs.close();
+
+      weight = vector<vector<vector<float> > >(popSize, weights);
+      return true;
+    } else {
+      std::cerr << "error opening file " << lf << std::endl;
+    }
+  }
+  return false;
 }

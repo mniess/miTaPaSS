@@ -95,7 +95,7 @@ bool Simulator::checkConfig() {
 }
 
 int Simulator::init() {
-  res = Resultor(num_area);
+  res = Resultor(time[1], num_area);
   init_areas(width, height, num_area);
   init_robots(num_robot);
   return 1;
@@ -120,8 +120,9 @@ int Simulator::simulate() {
         printf("Generation %i of %i finished!\n", gen+1, time[1]);
         res.printResults();
         engine->train(res);
+        res.nextGen();
       }
-      printf("Try %i of %i finished!\n", t+1, time[0]);
+      printf("Run %i of %i finished!\n", t+1, time[0]);
     }
   return 1;
 }

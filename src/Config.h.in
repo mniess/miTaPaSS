@@ -51,8 +51,6 @@ class Config{
   int readConfig(std::string file);
   std::string getValue(std::string key);
 
-  int saveWeights(std::string file, vector<vector<float> >);
-  vector<vector<float> > loadWeights(std::string file);
  private:
   std::map<std::string,std::string> values;
 
