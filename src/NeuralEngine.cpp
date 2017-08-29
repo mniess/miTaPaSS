@@ -126,10 +126,6 @@ void NeuralEngine::printWeights() {
       for (int k=0; k < weight[ind][j].size(); k++) {
         cout << weight[ind][j][k]<< " ";
       }
-      cout << "  ";
-      for (int k=0; k < weight[ind][j].size(); k++) {
-        cout << newWeight[ind][j][k]<< " ";
-      }
       cout << endl;
     }
     cout << endl;

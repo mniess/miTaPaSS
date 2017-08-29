@@ -6,10 +6,11 @@
 using std::cout, std::endl;
 
 Resultor::Resultor() {
-  Resultor(0,0);
+  Resultor(0, 0, 0);
 }
 
-Resultor::Resultor(int gen, int areas) {
+Resultor::Resultor(int gen, int areas, int trys) {
+  this->trys = trys;
   results =
     std::vector<std::vector<std::vector<int> > >(gen,
       std::vector<std::vector<int> >(areas,
@@ -44,7 +45,6 @@ std::vector<int> Resultor::getResults(int area, int gen) {
   if (area == -1) {
     area = getBestArea(gen);
   }
-  cout << gen<<" "<< area << "   " << results[gen][area][0] << "; " << results[gen][area][1] << "; " << results[gen][area][2] << "; ";
   return results[gen][area];
 }
 
@@ -53,11 +53,12 @@ void Resultor::printResults(int gen) {
     gen = currGen;
   }
   int bI = getBestArea(gen);
-  fprintf(stdout, "Best Area with fitness %i (InNest: %i, ByPart: %i, OnArea: %i)\n",
+  fprintf(stdout, "Best Area with fitness %i (InNest: %f, ByPart: %f, OnArea: %f) averaged over %i runs\n",
     getFitness(bI, gen),
-    results[gen][bI][data::tokenInNest],
-    results[gen][bI][data::tokenInNestByPartitioning],
-    results[gen][bI][data::tokenOnArea]);
+    static_cast<float>(results[gen][bI][data::tokenInNest])/trys,
+    static_cast<float>(results[gen][bI][data::tokenInNestByPartitioning])/trys,
+    static_cast<float>(results[gen][bI][data::tokenOnArea])/trys,
+    trys);
 }
 
 int Resultor::getBestArea(int gen) {

@@ -8,7 +8,7 @@ enum data { tokenInNest, tokenInNestByPartitioning, tokenOnArea};
 class Resultor {
  public:
   Resultor();
-  Resultor(int gen, int areas);
+  Resultor(int gen, int areas, int trys);
   void byPartitioning(int area, bool increase);
   void tokenInNest(int area);
   void tokenCreated(int area);
@@ -18,6 +18,7 @@ class Resultor {
   int getBestArea(int gen = -1);
   int getFitness(int area, int gen = -1);
  private:
+  int trys = 0;
   int currGen = 0;
   std::vector<std::vector<std::vector<int> > > results;
 };

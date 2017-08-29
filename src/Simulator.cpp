@@ -94,36 +94,30 @@ bool Simulator::checkConfig() {
   return true;
 }
 
-int Simulator::init() {
-  res = Resultor(time[1], num_area);
-  init_areas(width, height, num_area);
-  init_robots(num_robot);
-  return 1;
-}
-
 int Simulator::simulate() {
   cout << "\e[2J";
-    for (int t = 0; t < time[0]; t++) {
-      engine ->init(num_area, conf);
-      for (int gen = 0; gen < time[1]; gen++) {
-        init();
-        for (int run = 0; run < time[2]; run++) {
-          for (int area = 0; area < num_area; area++) {
-            for (auto &rob : robots[area]) {
-              step_robot(rob, area);
-            }
-          }
-          if (visualize) {
-            viz(run, 0);
+  engine ->init(num_area, conf);
+  for (int gen = 0; gen < time[1]; gen++) {
+    res = Resultor(time[1], num_area, time[0]);
+    for (int t = 0; t < time[0]; t++) {  // average fitness
+      init_areas(width, height, num_area);
+      init_robots(num_robot);
+      for (int step = 0; step < time[2]; step++) {
+        for (int area = 0; area < num_area; area++) {
+          for (auto &rob : robots[area]) {
+            step_robot(rob, area);
           }
         }
-        printf("Generation %i of %i finished!\n", gen+1, time[1]);
-        res.printResults();
-        engine->train(res);
-        res.nextGen();
-      }
-      printf("Run %i of %i finished!\n", t+1, time[0]);
+        if (visualize) {
+          viz(step, 0);
+        }
+      }  // end step
     }
+    printf("Generation %i of %i finished!\n", gen+1, time[1]);
+    res.printResults();
+    engine->train(res);
+    res.nextGen();
+  }
   return 1;
 }
 
