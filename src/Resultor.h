@@ -2,6 +2,7 @@
 #define SRC_RESULTOR_H_
 
 #include <vector>
+#include "src/Robot.h"
 
 enum data { tokenInNest, tokenInNestByPartitioning, tokenOnArea};
 
@@ -17,10 +18,16 @@ class Resultor {
   void printResults(int gen = -1);
   int getBestArea(int gen = -1);
   int getFitness(int area, int gen = -1);
+  int log(std::vector< std::vector<Robot> > robs);
  private:
+  int minGenToLog=1990;
+  int maxGenToLog=2000;
   int trys = 0;
   int currGen = 0;
   std::vector<std::vector<std::vector<int> > > results;
+  std::vector<std::vector<std::vector<int> > > logs;
+
+  int writeLog();
 };
 
 #endif  // SRC_RESULTOR_H_

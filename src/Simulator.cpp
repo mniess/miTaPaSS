@@ -97,8 +97,8 @@ bool Simulator::checkConfig() {
 int Simulator::simulate() {
   cout << "\e[2J";
   engine ->init(num_area, conf);
+  res = Resultor(time[1], num_area, time[0]);
   for (int gen = 0; gen < time[1]; gen++) {
-    res = Resultor(time[1], num_area, time[0]);
     for (int t = 0; t < time[0]; t++) {  // average fitness
       init_areas(width, height, num_area);
       init_robots(num_robot);
@@ -108,12 +108,13 @@ int Simulator::simulate() {
             step_robot(rob, area);
           }
         }
+        res.log(robots);
         if (visualize) {
           viz(step, 0);
         }
       }  // end step
     }
-    printf("Generation %i of %i finished!\n", gen+1, time[1]);
+    printf("Gen %i of %i: ", gen+1, time[1]);
     res.printResults();
     engine->train(res);
     res.nextGen();

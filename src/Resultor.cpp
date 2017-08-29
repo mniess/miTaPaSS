@@ -1,9 +1,14 @@
 #include "src/Resultor.h"
 
 #include <iostream>
+#include <string>
+#include <fstream>
 #include <vector>
 
+#include "src/Robot.h"
+
 using std::cout, std::endl;
+using std::vector;
 
 Resultor::Resultor() {
   Resultor(0, 0, 0);
@@ -35,7 +40,8 @@ void Resultor::tokenCreated(int area) {
 }
 
 void Resultor::nextGen() {
-  currGen++;
+  writeLog();
+  ++currGen;
 }
 
 std::vector<int> Resultor::getResults(int area, int gen) {
@@ -81,4 +87,46 @@ int Resultor::getFitness(int area, int gen) {
     return results[currGen][area][data::tokenInNest] + 1;
   }
   return results[gen][area][data::tokenInNest] + 1;
+}
+
+int Resultor::log(vector< vector<Robot> > robs) {
+  if (currGen >= minGenToLog && currGen <= maxGenToLog) {
+    vector< vector<int> > areas;
+    for (auto area : robs) {
+      vector<int> row;
+      row.reserve(area.size()*2);
+      for (Robot rob : area) {
+        row.push_back(rob.getY());
+        row.push_back(rob.carrying);
+      }
+      areas.push_back(row);
+    }
+    this->logs.push_back(areas);
+  }
+}
+
+int Resultor::writeLog() {
+  if (currGen >= minGenToLog && currGen <= maxGenToLog) {
+    cout << "writing runLog" << endl;
+    std::string filename = "runLogGen" + std::to_string(currGen);
+    std::ofstream ofs(filename, std::ios::out|std::ios::trunc);
+    if (ofs.is_open()) {
+      ofs << "generation; area; [robot.y; robot.carrying]*" << endl;
+      for (int gen = 0; gen < logs.size(); gen++) {
+        for (int area = 0; area < logs[gen].size(); area++) {
+          ofs << gen << "; ";
+          ofs << area << "; ";
+          for (int val : logs[gen][area]) {
+            ofs << val << "; ";
+          }
+          ofs << endl;
+        }
+      }
+      ofs << endl;
+      ofs.close();
+      logs.clear();
+    } else {
+      std::cerr << "error opening file for write " << filename << endl;
+    }
+  }
 }
