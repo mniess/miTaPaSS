@@ -27,8 +27,12 @@
 #define ENGINE "engine"
 #define VISUALIZATION "visualization"
 
-#define LOADFILE "loadFile"
-#define SAVEFILE "saveFile"
+#define LOADFILE "genLoadFile"
+#define SAVEFILE "genSaveFile"
+#define STEPSAVEFILE "stepSaveFilePrefix"
+
+#define MINGENLOG "minGenToStepLog"
+#define MAXGENLOG "maxGenToStepLog"
 
 //OPTIONS
 #define ENGINE_FERRANTE "ferrante"

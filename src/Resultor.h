@@ -3,13 +3,14 @@
 
 #include <vector>
 #include "src/Robot.h"
+#include "bin/Config.h"
 
 enum data { tokenInNest, tokenInNestByPartitioning, tokenOnArea};
 
 class Resultor {
  public:
   Resultor();
-  Resultor(int gen, int areas, int trys);
+  explicit Resultor(Config c);
   void byPartitioning(int area, bool increase);
   void tokenInNest(int area);
   void tokenCreated(int area);
@@ -20,12 +21,12 @@ class Resultor {
   int getFitness(int area, int gen = -1);
   int log(std::vector< std::vector<Robot> > robs);
  private:
-  int minGenToLog=1990;
-  int maxGenToLog=2000;
+  Config conf;
   int trys = 0;
   int currGen = 0;
+  int minGenToStepLog, maxGenToStepLog;
   std::vector<std::vector<std::vector<int> > > results;
-  std::vector<std::vector<std::vector<int> > > logs;
+  std::vector<std::vector<int> > logs;
 
   int writeLog();
 };

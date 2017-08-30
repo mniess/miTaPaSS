@@ -11,8 +11,7 @@ struct Area{
   Area() { }
 
   Area(int width, int length) {
-    std::vector< std::vector< int > > a(width, std::vector<int>(length, 0));
-    area = a;
+    area = std::vector< std::vector< int > >(width, std::vector<int>(length, 0));
   }
 
   Area& operator=(const Area &a) {

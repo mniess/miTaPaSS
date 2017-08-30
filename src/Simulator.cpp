@@ -97,7 +97,7 @@ bool Simulator::checkConfig() {
 int Simulator::simulate() {
   cout << "\e[2J";
   engine ->init(num_area, conf);
-  res = Resultor(time[1], num_area, time[0]);
+  res = Resultor(conf);
   for (int gen = 0; gen < time[1]; gen++) {
     for (int t = 0; t < time[0]; t++) {  // average fitness
       init_areas(width, height, num_area);
@@ -108,7 +108,9 @@ int Simulator::simulate() {
             step_robot(rob, area);
           }
         }
-        res.log(robots);
+        if(t == 0){
+          res.log(robots); // only save first
+        }
         if (visualize) {
           viz(step, 0);
         }
@@ -123,9 +125,8 @@ int Simulator::simulate() {
 }
 
 int Simulator::init_areas(int width, int length, int num) {
-  Area area(width, length);
-  areas.resize(num, area);
-  for (int a = 0; a < num_area; a++) {
+  areas = std::vector<Area>(num, Area(width, length));
+  for (int a = 0; a < num; a++) {
     for (int t = 0; t < num_token; t++) {
       newToken(a);
     }

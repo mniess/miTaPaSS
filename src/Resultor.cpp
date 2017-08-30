@@ -6,16 +6,22 @@
 #include <vector>
 
 #include "src/Robot.h"
+#include "bin/Config.h"
 
 using std::cout, std::endl;
 using std::vector;
 
 Resultor::Resultor() {
-  Resultor(0, 0, 0);
+  Resultor(Conf());
 }
 
-Resultor::Resultor(int gen, int areas, int trys) {
-  this->trys = trys;
+Resultor::Resultor(Config conf) {
+  this->conf = conf;
+  this->trys = stoi(conf.getValue(TIME_TRY));
+  int areas = stoi(conf.getValue(AREA_NUM));
+  int gen = stoi(conf.getValue(TIME_GENERATIONS));
+  minGenToStepLog = stoi(conf.getValue(MINGENLOG));
+  maxGenToStepLog = stoi(conf.getValue(MAXGENLOG));
   results =
     std::vector<std::vector<std::vector<int> > >(gen,
       std::vector<std::vector<int> >(areas,
@@ -90,37 +96,29 @@ int Resultor::getFitness(int area, int gen) {
 }
 
 int Resultor::log(vector< vector<Robot> > robs) {
-  if (currGen >= minGenToLog && currGen <= maxGenToLog) {
-    vector< vector<int> > areas;
-    for (auto area : robs) {
-      vector<int> row;
-      row.reserve(area.size()*2);
-      for (Robot rob : area) {
-        row.push_back(rob.getY());
-        row.push_back(rob.carrying);
-      }
-      areas.push_back(row);
+  if (currGen >= minGenToStepLog && currGen <= maxGenToStepLog) {
+    vector<int> row;
+    for (Robot rob : robs[0]) { // only log first area
+      row.push_back(rob.getY());
+      row.push_back(rob.carrying);
     }
-    this->logs.push_back(areas);
+    this->logs.push_back(row);
   }
 }
 
 int Resultor::writeLog() {
-  if (currGen >= minGenToLog && currGen <= maxGenToLog) {
+  if (currGen >= minGenToStepLog && currGen <= maxGenToStepLog) {
     cout << "writing runLog" << endl;
-    std::string filename = "runLogGen" + std::to_string(currGen);
+    std::string filename = conf.getValue(STEPSAVEFILE) + std::to_string(currGen);
     std::ofstream ofs(filename, std::ios::out|std::ios::trunc);
     if (ofs.is_open()) {
-      ofs << "generation; area; [robot.y; robot.carrying]*" << endl;
-      for (int gen = 0; gen < logs.size(); gen++) {
-        for (int area = 0; area < logs[gen].size(); area++) {
-          ofs << gen << "; ";
-          ofs << area << "; ";
-          for (int val : logs[gen][area]) {
-            ofs << val << "; ";
-          }
-          ofs << endl;
+      //ofs << "step; [robot.y; robot.carrying]*" << endl;
+      for (int step = 0; step < logs.size(); step++) {
+        ofs << step << "; ";
+        for (int val : logs[step]) {
+          ofs << val << "; ";
         }
+        ofs << endl;
       }
       ofs << endl;
       ofs.close();
