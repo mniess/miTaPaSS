@@ -12,7 +12,8 @@
 #include "bin/Config.h"
 
 using std::vector;
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 void NeuralEngine::init(int areas, Config &conf) {
   popSize = areas;

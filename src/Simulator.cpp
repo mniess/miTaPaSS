@@ -16,8 +16,11 @@
 #include "src/NeuralEngine.h"
 #include "src/Resultor.h"
 
-using std::vector, std::string;
-using std::cerr, std::cout, std::endl;
+using std::vector;
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
 
 Simulator::Simulator() {
 }

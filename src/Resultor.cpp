@@ -8,7 +8,8 @@
 #include "src/Robot.h"
 #include "bin/Config.h"
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 using std::vector;
 
 Resultor::Resultor() {

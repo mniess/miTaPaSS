@@ -6,8 +6,10 @@
 #include <string>
 #include <vector>
 
-using std::vector, std::string;
-using std::cout, std::endl;
+using std::vector;
+using std::string;
+using std::cout;
+using std::endl;
 
 Config::Config() {
 }

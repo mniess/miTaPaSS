@@ -8,7 +8,8 @@
 #include "bin/Config.h"
 #include "src/Simulator.h"
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 int checkHelp(int argc, char* argv[]) {
   if ( argc == 2 ) {
