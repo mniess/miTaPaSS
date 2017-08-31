@@ -58,3 +58,6 @@ All options are of the form [option]=[value]
      1. following the [y-coordinate]; [carrying]; of all robots
    * ''minGenToStepLog'': generation where to start logging each generation in a stepLogfile
    * ''maxGenToStepLog'': generation where to stop logging each generation in a stepLogfile
+
+
+The output using the neural engine is similar to the genSaveFile outputs.
