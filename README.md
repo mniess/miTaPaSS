@@ -32,7 +32,6 @@ All options are of the form [option]=[value]
    * ''robot_num'': how much robots are on the simulation area
    * ''token_num'': the inital amount of tokens
  * Simulation time
-<<<<<<< HEAD
    * ''time_generations'': simulated generations, between generations, learning takes place
    * ''time_try'': times each generation is executed to average fitness
    * ''time_run'': simulationsteps for each try
